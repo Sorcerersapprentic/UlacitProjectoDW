@@ -1,10 +1,34 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+$mostrarConfirmacion = false;
+
+if(isset($_POST["contact_name"]))
+{
+
+
+    include("includes/data.php");
+    $sql    = "INSERT INTO tb_contacto(nombre, email, asunto, mensaje) VALUES (?, ?, ?, ?);";
+    $stmt   = $conn->prepare($sql);
+    //echo var_dump($stmt);
+    $stmt->bind_param("ssss", $_POST["contact_name"], $_POST["contact_email"], $_POST["contact_subject"], $_POST["contact_message"]);
+    $stmt->execute();
+    //echo $stmt->affected_rows;
+    $stmt->close();
+    $conn->close();
+$mostrarConfirmacion = true;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>La Comarca - Información de contacto</title>
+  <title>La Comarca - Informaci&oacute;n de contacto</title>
 <!-- 
 Cafe House Template
 http://www.templatemo.com/tm-466-cafe-house
@@ -32,30 +56,10 @@ http://www.templatemo.com/tm-466-cafe-house
       <div class="loader-section section-right"></div>
     </div>
     <!-- End Preloader -->
-    <div class="tm-top-header">
-      <div class="container">
-        <div class="row">
-          <div class="tm-top-header-inner">
-            <div class="tm-logo-container">
-              <img src="img/logo.png" alt="Logo" class="tm-site-logo">
-              <h1 class="tm-site-name tm-handwriting-font">Cafe House</h1>
-            </div>
-            <div class="mobile-menu-icon">
-              <i class="fa fa-bars"></i>
-            </div>
-            <nav class="tm-nav">
-              <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="today-special.html">Today Special</a></li>
-                <li><a href="menu.html">Menu</a></li>
-                <li><a href="contact.html" class="active">Contact</a></li>
-              </ul>
-            </nav>   
-          </div>           
-        </div>    
-      </div>
-    </div>
-    <section class="tm-welcome-section">
+    <?php 
+	include('includes/navegacion.php');
+?>    
+   <!-- <section class="tm-welcome-section">
       <div class="container tm-position-relative">
         <div class="tm-lights-container">
           <img src="img/light.png" alt="Light" class="light light-1">
@@ -70,27 +74,33 @@ http://www.templatemo.com/tm-466-cafe-house
         </div>
         <img src="img/table-set.png" alt="Table Set" class="tm-table-set img-responsive">            
       </div>      
-    </section>
+    </section> -->
     <div class="tm-main-section light-gray-bg">
       <div class="container" id="main">
         <section class="tm-section row">
-          <h2 class="col-lg-12 margin-bottom-30">Send us a message</h2>
-          <form action="#" method="post" class="tm-contact-form">
+          <h2 class="col-lg-12 margin-bottom-30">Contactanos</h2>
+          <form action="contact.php" method="post" class="tm-contact-form">
             <div class="col-lg-6 col-md-6">
               <div class="form-group">
-                <input type="text" id="contact_name" class="form-control" placeholder="NAME" />
+                <input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="NOMBRE" required/>
               </div>
               <div class="form-group">
-                <input type="email" id="contact_email" class="form-control" placeholder="EMAIL" />
+                <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="EMAIL" required/>
               </div>
               <div class="form-group">
-                <input type="text" id="contact_subject" class="form-control" placeholder="SUBJECT" />
+                <input type="text" id="contact_subject" name="contact_subject" class="form-control" placeholder="ASUNTO" required/>
               </div>
               <div class="form-group">
-                <textarea id="contact_message" class="form-control" rows="6" placeholder="MESSAGE"></textarea>
+                <textarea id="contact_message" name="contact_message" class="form-control" rows="6" placeholder="MENSAJE" required></textarea>
               </div>
               <div class="form-group">
-                <button class="tm-more-button" type="submit" name="submit">Send message</button> 
+                <button class="tm-more-button" type="submit" name="submit">Enviar mensaje</button> 
+<?php
+if($mostrarConfirmacion)
+{
+	echo("<p> Gracias por su mensaje </p>");
+}
+ ?>
               </div>               
             </div>
             <div class="col-lg-6 col-md-6">
@@ -100,7 +110,7 @@ http://www.templatemo.com/tm-466-cafe-house
         </section>
       </div>
     </div> 
-    <footer>
+    <!-- <footer>
       <div class="tm-black-bg">
         <div class="container">
           <div class="row margin-bottom-60">
@@ -138,7 +148,7 @@ http://www.templatemo.com/tm-466-cafe-house
            <p class="col-lg-12 small copyright-text text-center">Copyright &copy; 2084 Your Cafe House</p>
          </div>  
       </div>
-   </footer> <!-- Footer content-->  
+   </footer> Footer content-->  
    <!-- JS -->
    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>      <!-- jQuery -->
    <script type="text/javascript" src="js/templatemo-script.js"></script>      <!-- Templatemo Script -->
@@ -151,7 +161,7 @@ http://www.templatemo.com/tm-466-cafe-house
       function initialize() {
         var mapOptions = {
           zoom: 16,
-          center: new google.maps.LatLng(13.758468,100.567481),
+          center: new google.maps.LatLng(9.422972, -83.658656),
           scrollwheel: false
         };
         
